@@ -20,3 +20,10 @@ $("#add-device").on("click", function () {
 
     location.href = 'device-list.html';
 });
+
+//Send command, prints the user input to console when the send button in pressed
+$('#send-command').on("click", function () {
+    const command = $('#command').val();
+
+    console.log(`command is ${command}`);
+});
