@@ -18,7 +18,7 @@ $("#add-device").on("click", function () {
     devices.push({user, name});
     localStorage.setItem('devices', JSON.stringify(devices))
 
-    location.href = 'device-list.html';
+    location.href = '/';
 });
 
 //Send command, prints the user input to console when the send button in pressed
