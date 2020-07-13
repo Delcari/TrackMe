@@ -15,10 +15,10 @@ devices.forEach(function(device) {
 });
 
 //Adds the device to the devices array when the save button is clicked
-document.querySelector("#add-device").addEventListener('click', function() {
-    const user = document.querySelector('#user').value;
-    const name = document.querySelector('#name').value;
-
-    devices.push({user:user, name:name});
+$("#add-device").on("click", function () {
+    const user = $('#user').val();
+    const name = $('#name').val();
+    
+    devices.push({user, name});
     console.log(devices);
 });
