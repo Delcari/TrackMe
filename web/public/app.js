@@ -1,3 +1,6 @@
+
+$('#navbar').load('navbar.html');
+
 const devices = JSON.parse(localStorage.getItem('devices')) || [];
 
 //Adds all the devices from the devices array to the table
@@ -27,3 +30,4 @@ $('#send-command').on("click", function () {
 
     console.log(`command is ${command}`);
 }); 
+
