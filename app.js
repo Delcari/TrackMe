@@ -1,8 +1,4 @@
-const devices = [];
-
-devices.push({ user: "Mary", name: "Mary's Iphone"});
-devices.push({ user: "Alex", name: "Alex's Surface Pro"});
-devices.push({ user: "Mary", name: "Mary's Macbook" });
+const devices = JSON.parse(localStorage.getItem('devices')) || [];
 
 //Adds all the devices from the devices array to the table
 devices.forEach(function(device) {
@@ -20,5 +16,7 @@ $("#add-device").on("click", function () {
     const name = $('#name').val();
     
     devices.push({user, name});
-    console.log(devices);
+    localStorage.setItem('devices', JSON.stringify(devices))
+
+    location.href = 'device-list.html';
 });
