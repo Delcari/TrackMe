@@ -1,9 +1,11 @@
 
+//Loads the nav menu and footer into their respective divs on each page.
 $('#navbar').load('navbar.html');
 $('#footer').load('footer.html');
 
 const devices = JSON.parse(localStorage.getItem('devices')) || [];
-
+const users = JSON.parse(localStorage.getItem('users')) || [];
+                 
 //Adds all the devices from the devices array to the table
 devices.forEach(function(device) {
     $('#devices tbody').append(`
@@ -32,3 +34,18 @@ $('#send-command').on("click", function () {
     console.log(`command is ${command}`);
 }); 
 
+$('#register').on("click", () => {
+    const username = $('#username').val();
+    const password = $('#password').val();
+    const confirm = $('#confirm').val();
+
+    const exists = users.find(user => user.name === username);
+
+    console.log(exists);
+    if (!exists && password === confirm) {
+        users.push({username, password});     
+
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+    //$('#message').addClass("alert alert-primary");
+});
