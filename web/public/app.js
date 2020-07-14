@@ -3,7 +3,9 @@
 $('#navbar').load('navbar.html');
 $('#footer').load('footer.html');
 
+
 const devices = JSON.parse(localStorage.getItem('devices')) || [];
+
 const users = JSON.parse(localStorage.getItem('users')) || [];
                  
 //Adds all the devices from the devices array to the table
@@ -40,12 +42,17 @@ $('#register').on("click", () => {
     const confirm = $('#confirm').val();
 
     const exists = users.find(user => user.name === username);
-
-    console.log(exists);
+    
     if (!exists && password === confirm) {
-        users.push({username, password});     
+        users.push({name : username, password});     
 
         localStorage.setItem('users', JSON.stringify(users));
+        $('#message').removeClass().text("");
+
+        //localStorage.setItem('isAuthenticated', true);
     }
-    //$('#message').addClass("alert alert-primary");
+    else
+    {
+        $('#message').addClass("alert alert-primary").text("ERROR: Username already taken!");
+    }
 });
