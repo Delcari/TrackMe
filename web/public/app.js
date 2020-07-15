@@ -36,23 +36,51 @@ $('#send-command').on("click", function () {
     console.log(`command is ${command}`);
 }); 
 
+//Checks if the username is unique and registers the 
+//user if the password matches the confirmation
 $('#register').on("click", () => {
     const username = $('#username').val();
     const password = $('#password').val();
     const confirm = $('#confirm').val();
+    
+    $('#message').removeClass().text("");
 
     const exists = users.find(user => user.name === username);
     
     if (!exists && password === confirm) {
         users.push({name : username, password});     
-
+        
         localStorage.setItem('users', JSON.stringify(users));
-        $('#message').removeClass().text("");
-
-        //localStorage.setItem('isAuthenticated', true);
     }
     else
     {
         $('#message').addClass("alert alert-primary").text("ERROR: Username already taken!");
     }
 });
+
+//Checks if the credentials match and updates the isAuthenticated variable.
+$('#login').on("click", () => {
+    const username = $('#username').val();
+    const password = $('#password').val();
+    
+    $('#message').removeClass().text("");
+    
+    const exists = users.find(user => user.name == username)
+
+    if (exists && password == exists.password)
+    {
+        console.log("i exist");
+        localStorage.setItem('isAuthenticated', true);
+        location.href = '/';
+    }
+    else
+    {
+        $('#message').addClass("alert alert-primary").text("ERROR: Username or password does not match!");
+    }
+});
+
+//logs out the user and redirects to the login page
+const logout = () => {
+    localStorage.removeItem('isAuthenticated');
+    location.href = '/login';
+};
