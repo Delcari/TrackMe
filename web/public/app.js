@@ -39,11 +39,11 @@ $('#send-command').on("click", function () {
 //Checks if the username is unique and registers the 
 //user if the password matches the confirmation
 $('#register').on("click", () => {
-    const username = $('#username').val();
-    const password = $('#password').val();
-    const confirm = $('#confirm').val();
+    const username = $('#reg-username').val();
+    const password = $('#reg-password').val();
+    const confirm = $('#reg-confirm').val();
     
-    $('#message').removeClass().text("");
+    $('#reg-message').removeClass().text("");
 
     const exists = users.find(user => user.name === username);
     
@@ -51,19 +51,21 @@ $('#register').on("click", () => {
         users.push({name : username, password});     
         
         localStorage.setItem('users', JSON.stringify(users));
+        location.href = '/login';
     }
+    else if (exists)
+        $('#reg-message').addClass("alert alert-primary").text("ERROR: Username already taken!");
     else
-    {
-        $('#message').addClass("alert alert-primary").text("ERROR: Username already taken!");
-    }
+        $('#reg-message').addClass("alert alert-primary").text("ERROR: Passwords don't match!");
+
 });
 
 //Checks if the credentials match and updates the isAuthenticated variable.
 $('#login').on("click", () => {
-    const username = $('#username').val();
-    const password = $('#password').val();
+    const username = $('#login-username').val();
+    const password = $('#login-password').val();
     
-    $('#message').removeClass().text("");
+    $('#login-message').removeClass().text("");
     
     const exists = users.find(user => user.name == username)
 
@@ -75,7 +77,7 @@ $('#login').on("click", () => {
     }
     else
     {
-        $('#message').addClass("alert alert-primary").text("ERROR: Username or password does not match!");
+        $('#login-message').addClass("alert alert-primary").text("ERROR: Username or password does not match!");
     }
 });
 
