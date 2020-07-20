@@ -4,30 +4,45 @@ $('#navbar').load('navbar.html');
 $('#footer').load('footer.html');
 
 
-const devices = JSON.parse(localStorage.getItem('devices')) || [];
+//const devices = JSON.parse(localStorage.getItem('devices')) || [];
+const response = $.get('http://localhost:3001/devices')
+.then(response => {
+    response.forEach(device =>
+    {
+        $('#devices tbody').append(`
+        <tr>
+        <td>${device.user}</td>
+        <td>${device.name}</td>
+        </tr>`);
+    });
+})
+.catch(error => {
+    console.log(`Error: ${error}`)
+});
+
 
 const users = JSON.parse(localStorage.getItem('users')) || [];
-                 
-//Adds all the devices from the devices array to the table
-devices.forEach(function(device) {
-    $('#devices tbody').append(`
-    <tr>
-    <td>${device.user}</td>
-    <td>${device.name}</td>
-    </tr>`
-    );
-});
 
 //Adds the device to the devices array when the save button is clicked
-$("#add-device").on("click", function () {
+$("#add-device").on("click", () => {
     const user = $('#user').val();
     const name = $('#name').val();
-    
-    devices.push({user, name});
-    localStorage.setItem('devices', JSON.stringify(devices))
-    
-    location.href = '/';
-});
+    const sensorData = [];
+
+    const body = {
+        name, 
+        user, 
+        sensorData
+    };
+
+    $.post('http://localhost.com:3001/devices', body)
+    .then(response => {
+        location.href = '/';
+    })
+    .catch(error => {
+            console.error(`Error: ${error}`);
+        });
+    });
 
 //Send command, prints the user input to console when the send button in pressed
 $('#send-command').on("click", function () {
