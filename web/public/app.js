@@ -3,27 +3,62 @@
 $('#navbar').load('navbar.html');
 $('#footer').load('footer.html');
 
+//API URL
+const API_URL = 'http://localhost:5000/api'
+//Currently logged in user
+const currentUser = localStorage.getItem('user');
 
-//const devices = JSON.parse(localStorage.getItem('devices')) || [];
-const response = $.get('http://localhost:3001/devices')
-.then(response => {
-    response.forEach(device =>
-    {
-        $('#devices tbody').append(`
-        <tr>
-        <td>${device.user}</td>
-        <td>${device.name}</td>
-        </tr>`);
+if (currentUser)
+{
+    //Gets the list of the users devices
+    $.get(`${API_URL}/users/${currentUser}/devices`)
+    .then(response => {
+        response.forEach((device) => {
+            //Adds the devices to the table
+            $('#devices tbody').append(`
+            <tr data-device-id=${device._id}>
+                <td>${device.user}</td>
+                <td>${device.name}</td>
+            </tr>`
+            );
+        });
+        //When a table item is clicked
+        $('#devices tbody tr').on('click', (e) => {
+            const deviceId = e.currentTarget.getAttribute('data-device-id');
+            $.get(`${API_URL}/devices/${deviceId}/device-history`)
+            .then(response => {
+                //Place the sensor data in the Modal
+                response.map(sensorData => {
+                    $('#historyContent').append(`
+                    <tr>
+                    <td>${sensorData.ts}</td>
+                    <td>${sensorData.temp}</td>
+                    <td>${sensorData.loc.lat}</td>
+                    <td>${sensorData.loc.lon}</td>
+                    </tr>`);
+                    //Show the Modal
+                    $('#historyModal').modal('show')
+                })
+            })
+
+        })
+
+    }).catch(error => {
+        console.error(`Error: ${error}`);
     });
-})
-.catch(error => {
-    console.log(`Error: ${error}`)
-});
+}
+else
+{
+    //If there is currently no user logged in
+    const path = window.location.pathname;
 
+    //Redirect to the login page
+    if (path !== '/login') {
+        location.href = '/login';
+    }
+}
 
-const users = JSON.parse(localStorage.getItem('users')) || [];
-
-//Adds the device to the devices array when the save button is clicked
+//Adds the device to the DB when the save button is clicked
 $("#add-device").on("click", () => {
     const user = $('#user').val();
     const name = $('#name').val();
@@ -35,7 +70,7 @@ $("#add-device").on("click", () => {
         sensorData
     };
 
-    $.post('http://localhost.com:3001/devices', body)
+    $.post(`${API_URL}/devices`, body)
     .then(response => {
         location.href = '/';
     })
@@ -60,44 +95,46 @@ $('#register').on("click", () => {
     
     $('#reg-message').removeClass().text("");
 
-    const exists = users.find(user => user.name === username);
-    
-    if (!exists && password === confirm) {
-        users.push({name : username, password});     
-        
-        localStorage.setItem('users', JSON.stringify(users));
-        location.href = '/login';
+    if (password === confirm) {
+        $.post(`${API_URL}/register`, { user, password })
+        .then(response =>{
+            if (response.success)
+                location.href = '/login';
+            else
+                $('#reg-message').addClass("alert alert-primary").text(response);
+        });
     }
-    else if (exists)
-        $('#reg-message').addClass("alert alert-primary").text("ERROR: Username already taken!");
     else
         $('#reg-message').addClass("alert alert-primary").text("ERROR: Passwords don't match!");
 
 });
 
-//Checks if the credentials match and updates the isAuthenticated variable.
+//Login form
 $('#login').on("click", () => {
-    const username = $('#login-username').val();
+    const user = $('#login-username').val();
     const password = $('#login-password').val();
-    
-    $('#login-message').removeClass().text("");
-    
-    const exists = users.find(user => user.name == username)
 
-    if (exists && password == exists.password)
-    {
-        console.log("i exist");
-        localStorage.setItem('isAuthenticated', true);
-        location.href = '/';
-    }
-    else
-    {
-        $('#login-message').addClass("alert alert-primary").text("ERROR: Username or password does not match!");
-    }
+    $('#login-message').removeClass().text("");
+
+    //checks if the credentials match
+    $.post(`${API_URL}/authenticate`, { user, password })
+    .then(response => {
+        //Adds data to local storage
+        if (response.success) {
+            localStorage.setItem('user', user);
+            localStorage.setItem('isAdmin', response.setAdmin);
+
+            location.href = '/';
+        }
+        else {
+            $('#login-message').addClass("alert alert-primary").text(response);
+        }
+    });
 });
 
 //logs out the user and redirects to the login page
 const logout = () => {
-    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('user');
+    localStorage.removeItem('isAdmin');
     location.href = '/login';
 };
