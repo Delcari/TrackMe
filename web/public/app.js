@@ -5,7 +5,7 @@ $('#footer').load('footer.html');
 
 //API URL
 const API_URL = 'https://api.rdellios.vercel.app/api'
-const MQTT_URL = 'http://localhost:5001/'
+const MQTT_URL = 'http://localhost:5001'
 
 //Currently logged in user
 const currentUser = localStorage.getItem('user');
