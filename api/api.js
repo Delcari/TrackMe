@@ -8,9 +8,9 @@ const Device = require(`./models/device`);
 const User = require(`./models/user`);
 
 
-mongoose.connect(process.env.MONGO_URL, {useNewUrlParser:true, useUnifiedTopology:true});
+mongoose.connect('mongodb+srv://riley:Nicholas17@trackme.xciqt.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser:true, useUnifiedTopology:true});
 
-const port = process.env.PORT || 5000;
+const port = 5000;
 
 const app = express();
 
@@ -52,7 +52,7 @@ app.post('/api/authenticate', (req, res) => {
     const { user, password } = req.body;
     
     //Search the db for the username
-    User.findOne({ name: user }, (err, data) => {
+    User.findOne({ name: user }, function(err, data) {
         //Handle the response
         if (err)
             res.send(err);
