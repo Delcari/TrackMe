@@ -191,17 +191,6 @@ app.post('/api/devices', (req, res) => {
 });
 
 /**
-* @api {post} /api/send-command Send Command to Device (WIP)
-* @apiGroup Device
-* @apiParam {String} command Command you wish to send
-* @apiSuccessExample Success-Response:
-* Console -> 'Turn on light'
-*/
-app.post('/api/send-command', (req, res) => {
-    console.log(req.body);
-})
-
-/**
 * @api {get} /api/test Checking if the API is Live
 * @apiGroup Test
 * @apiSuccessExample Success-Response:
