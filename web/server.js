@@ -2,11 +2,18 @@ const express = require('express');
 
 const app = express();
 
+
 const port = process.env.PORT || 3000;
 const base = `${__dirname}/public`;
 
 app.use(express.static('public'));
 
+//Cross-Origin Request Headers
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 app.get('/', (req, res) => {
 	res.sendFile(`${base}/device-list.html`);
