@@ -5,6 +5,8 @@ $('#footer').load('footer.html');
 
 //API URL
 const API_URL = 'https://api.rdellios.vercel.app/api'
+const MQTT_URL = 'http://localhost:5001/'
+
 //Currently logged in user
 const currentUser = localStorage.getItem('user');
 
@@ -82,7 +84,11 @@ $("#add-device").on("click", () => {
 //Send command, prints the user input to console when the send button in pressed
 $('#send-command').on("click", function () {
     const command = $('#command').val();
-    
+    const deviceId = $('#deviceid').val();
+    $.post(`${MQTT_URL}/send-command`, { deviceId, command })
+    .then(response => {
+        console.log(response);
+    })
     console.log(`command is ${command}`);
 }); 
 
