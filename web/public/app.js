@@ -4,7 +4,7 @@ $('#navbar').load('navbar.html');
 $('#footer').load('footer.html');
 
 //API URL
-const API_URL = 'https://api.rdellios.vercel.app/api'
+const API_URL = 'http://localhost:5000/api' //'https://api.rdellios.vercel.app/api'
 const MQTT_URL = 'http://localhost:5001'
 
 //Currently logged in user
@@ -55,7 +55,7 @@ else
     const path = window.location.pathname;
 
     //Redirect to the login page
-    if (path !== '/login') {
+    if (path !== '/login' && path !== '/registration') {
         location.href = '/login';
     }
 }
@@ -98,11 +98,11 @@ $('#register').on("click", () => {
     const username = $('#reg-username').val();
     const password = $('#reg-password').val();
     const confirm = $('#reg-confirm').val();
-    
+
     $('#reg-message').removeClass().text("");
 
     if (password === confirm) {
-        $.post(`${API_URL}/register`, { user, password })
+        $.post(`${API_URL}/registration`, { user: username, password })
         .then(response =>{
             if (response.success)
                 location.href = '/login';
