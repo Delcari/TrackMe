@@ -7,8 +7,7 @@ const Device = require(`./models/device`);
 //User Model (MONGODB)
 const User = require(`./models/user`);
 
-
-mongoose.connect('mongodb+srv://riley:Nicholas17@trackme.xciqt.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser:true, useUnifiedTopology:true});
+mongoose.connect(process.env.MONGO_URL, {useNewUrlParser:true, useUnifiedTopology:true});
 
 const port = 5000;
 
